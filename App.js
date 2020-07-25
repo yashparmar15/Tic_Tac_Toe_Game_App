@@ -10,22 +10,28 @@ export default class App extends Component {
       [0,0,0],
       [0,0,0]
     ],
+    counter : 0,
     currentPlayer : 1,
     p1 : 0,
     p2 : 0,
+    
   }
   componentDidMount(){
     this.initial();
   }
 
   initial = () => {
+    if(this.state.counter !== 0){
+    const counter = this.state.counter + 1;
+    this.setState({counter : counter});
+    }
     this.setState({
       grid : [
         [0,0,0],
         [0,0,0],
         [0,0,0]
       ],
-      currentPlayer : 1,
+      currentPlayer : this.state.counter % 2 == 1 ? 1 : -1,
       win : 0,
       
     });
@@ -64,6 +70,8 @@ export default class App extends Component {
       const p1 = this.state.p1 + 1;
       this.setState({p1 : p1})
       this.setState({win : 1});
+      const counter = this.state.counter + 1;
+      this.setState({counter : counter});
       this.initial();
     }
     else if(sum === -3){
@@ -71,6 +79,8 @@ export default class App extends Component {
       const p2 = this.state.p2+ 1;
       this.setState({p2 : p2})
       this.setState({win : 1})
+      const counter = this.state.counter + 1;
+      this.setState({counter : counter });
       this.initial();
     }
   }
@@ -121,13 +131,14 @@ export default class App extends Component {
   render(){
     return (
       <View style={styles.container}>
-        <View style = {{marginBottom : 50 , borderColor : 'black' , borderWidth : 3 , padding : 30 , borderRadius : 20}}>
+        <View style = {{marginBottom : 20 , borderColor : 'black' , borderWidth : 3 , padding : 30 , borderRadius : 20}}>
           <Text style = {{fontSize : 20 , fontWeight : 'bold'}}>Player 1 Score  <Feather style = {[styles.iconX , ]} name="x" size={20}  /> : {this.state.p1}</Text>
           <Text style = {{fontSize : 20 , fontWeight : 'bold'}}>Player 2 Score  <Entypo style = {[styles.iconY , ]} name="circle" size={20}  /> : {this.state.p2}</Text>
           <View style = {{marginBottom : 20}}></View>
           <Button onPress = {() => this.resetscore()} title = "Reset Score"/>
 
         </View>
+        <Text style = {{marginBottom : 30 , fontSize : 18 , fontWeight : 'bold' }}>Player {this.state.currentPlayer === 1 ? <Feather style = {[styles.iconX , ]} name="x" size={18}  /> : <Entypo style = {[styles.iconY , ]} name="circle" size={18}  /> } Chance </Text>
         <View style = {styles.row}>
           <TouchableOpacity onPress = {() => this.printValue(0,0)}  style = {[styles.block , {borderLeftWidth : 0 , borderTopWidth : 0}]}>
             {this.getValue(0,0)}
