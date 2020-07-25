@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View , TouchableOpacity ,Alert, Button} from 'react-native';
-import { Entypo } from '@expo/vector-icons'; 
+import { Entypo , Feather } from '@expo/vector-icons'; 
 
 export default class App extends Component {
   
@@ -10,7 +10,9 @@ export default class App extends Component {
       [0,0,0],
       [0,0,0]
     ],
-    currentPlayer : 1
+    currentPlayer : 1,
+    p1 : 0,
+    p2 : 0,
   }
   componentDidMount(){
     this.initial();
@@ -24,7 +26,8 @@ export default class App extends Component {
         [0,0,0]
       ],
       currentPlayer : 1,
-      win : 0
+      win : 0,
+      
     });
   }
 
@@ -58,12 +61,16 @@ export default class App extends Component {
     var grid = this.state.grid;
     if(sum === 3) {
       Alert.alert("Player 1 win the game");
+      const p1 = this.state.p1 + 1;
+      this.setState({p1 : p1})
       this.setState({win : 1});
       this.initial();
     }
     else if(sum === -3){
       Alert.alert("Player 2 win the game");
-      this.setState({win : 1});
+      const p2 = this.state.p2+ 1;
+      this.setState({p2 : p2})
+      this.setState({win : 1})
       this.initial();
     }
   }
@@ -81,6 +88,18 @@ export default class App extends Component {
       this.setState({grid : g , currentPlayer : 1})
     }
     this.checkWinner();
+    // var grid = this.state.grid;
+    // let count = 0;
+    //   for(let i = 0 ; i < 3 ; i++){
+    //     for(let j = 0 ; j < 3 ; j++){
+    //       if(grid[i][j] !== 0)
+    //         count++;
+    //     }
+    //   }
+    //   if(count === 9 && this.state.win){
+    //     Alert.alert("Match Draw");
+    //     this.initial();
+    //   }
   }
 
   getValue = (row,col) => {
@@ -95,10 +114,20 @@ export default class App extends Component {
     return <View></View>;
   }
 
+  resetscore(){
+    this.setState({p1 : 0 , p2 : 0});
+  }
 
   render(){
     return (
       <View style={styles.container}>
+        <View style = {{marginBottom : 50 , borderColor : 'black' , borderWidth : 3 , padding : 30 , borderRadius : 20}}>
+          <Text style = {{fontSize : 20 , fontWeight : 'bold'}}>Player 1 Score  <Feather style = {[styles.iconX , ]} name="x" size={20}  /> : {this.state.p1}</Text>
+          <Text style = {{fontSize : 20 , fontWeight : 'bold'}}>Player 2 Score  <Entypo style = {[styles.iconY , ]} name="circle" size={20}  /> : {this.state.p2}</Text>
+          <View style = {{marginBottom : 20}}></View>
+          <Button onPress = {() => this.resetscore()} title = "Reset Score"/>
+
+        </View>
         <View style = {styles.row}>
           <TouchableOpacity onPress = {() => this.printValue(0,0)}  style = {[styles.block , {borderLeftWidth : 0 , borderTopWidth : 0}]}>
             {this.getValue(0,0)}
